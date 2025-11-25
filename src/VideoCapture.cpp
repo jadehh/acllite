@@ -139,7 +139,7 @@ bool FFmpegDecoder::OpenVideo(AVFormatContext*& avFormatContext)
     bool ret = true;
     AVDictionary* avdic = nullptr;
 
-    av_log_set_level(AV_LOG_DEBUG);
+    av_log_set_level(AV_LOG_ERROR);
 
     ACLLITE_LOG_INFO("Open video %s ...", streamName_.c_str());
     SetDictForRtsp(avdic);
@@ -433,6 +433,9 @@ AclLiteError VideoCapture::Open()
         return ret;
     }
     // Init ffmpeg decoder
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100)
+    av_register_all();
+#endif
     ret = InitFFmpegDecoder();
     if (ret != ACLLITE_OK) {
         this->SetStatus(DECODE_ERROR);

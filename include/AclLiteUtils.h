@@ -134,8 +134,7 @@
  * @return none
  */
 #define ACLLITE_LOG_ERROR(fmt, ...) \
-    do {aclAppLog(ACL_ERROR, __FUNCTION__, __FILE__, __LINE__, fmt, ##__VA_ARGS__); \
-        fprintf(stdout, "[ERROR]  " fmt "\n", ##__VA_ARGS__);}while (0)
+    do {aclAppLog(ACL_ERROR, __FUNCTION__, __FILE__, __LINE__, fmt, ##__VA_ARGS__);}while (0)
 
 /**
  * @brief Write acl info level log to host log
@@ -143,8 +142,7 @@
  * @return none
  */
 #define ACLLITE_LOG_INFO(fmt, ...) \
-    do {aclAppLog(ACL_INFO, __FUNCTION__, __FILE__, __LINE__, fmt, ##__VA_ARGS__); \
-        fprintf(stdout, "[INFO]  " fmt "\n", ##__VA_ARGS__);}while (0)
+    do {aclAppLog(ACL_INFO, __FUNCTION__, __FILE__, __LINE__, fmt, ##__VA_ARGS__);}while (0)
 
 /**
  * @brief Write acl warining level log to host log
@@ -152,8 +150,7 @@
  * @return none
  */
 #define ACLLITE_LOG_WARNING(fmt, ...) \
-    do {aclAppLog(ACL_WARNING, __FUNCTION__, __FILE__, __LINE__, fmt, ##__VA_ARGS__); \
-        fprintf(stdout, "[WARNING]  " fmt "\n", ##__VA_ARGS__);}while (0)
+    do {aclAppLog(ACL_WARNING, __FUNCTION__, __FILE__, __LINE__, fmt, ##__VA_ARGS__);}while (0)
 
 /**
  * @brief Write acl debug level log to host log
@@ -161,8 +158,7 @@
  * @return none
  */
 #define ACLLITE_LOG_DEBUG(fmt, ...) \
-    do {aclAppLog(ACL_DEBUG, __FUNCTION__, __FILE__, __LINE__, fmt, ##__VA_ARGS__); \
-        fprintf(stdout, "[INFO]  " fmt "\n", ##__VA_ARGS__);}while (0)
+    do {aclAppLog(ACL_DEBUG, __FUNCTION__, __FILE__, __LINE__, fmt, ##__VA_ARGS__);}while (0)
 
 /**
  * @brief define variable record time &&
