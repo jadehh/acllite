@@ -450,7 +450,7 @@ size_t AclLiteModel::GetModelInputSize(int index)
     return modelInputSize;
 }
 
-AclLiteError AclLiteModel::GetModelInputInfo(vector<ModelInputInfo>& modelInputInfo)
+AclLiteError AclLiteModel::GetModelInputInfo(vector<ModelOutputInfo>& modelInputInfo)
 {
     for (size_t i = 0; i < aclmdlGetDatasetNumBuffers(input_); ++i) {
         ModelInputInfo inputInfo;
