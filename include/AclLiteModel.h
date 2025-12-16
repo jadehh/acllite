@@ -93,6 +93,7 @@ public:
     * Other: Failed to get
     */
     size_t GetModelInputSize(int index);
+    AclLiteError GetModelInputInfo(std::vector<ModelInputInfo>& modelInputInfo);
     AclLiteError GetModelOutputInfo(std::vector<ModelOutputInfo>& modelOutputInfo);
     void DestroyInput();
 
