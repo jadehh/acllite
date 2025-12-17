@@ -449,23 +449,6 @@ size_t AclLiteModel::GetModelInputSize(int index)
     size_t modelInputSize = aclmdlGetInputSizeByIndex(modelDesc_, index);
     return modelInputSize;
 }
-
-AclLiteError AclLiteModel::GetModelInputInfo(vector<ModelOutputInfo>& modelInputInfo)
-{
-    for (size_t i = 0; i < aclmdlGetDatasetNumBuffers(input_); ++i) {
-        ModelOutputInfo inputInfo;
-        inputInfo.name = aclmdlGetInputNameByIndex(modelDesc_, i);
-        aclmdlGetInputDims(modelDesc_, i, &inputInfo.dims);
-        inputInfo.format = aclmdlGetInputFormat(modelDesc_, i);
-        inputInfo.dataType = aclmdlGetInputDataType(modelDesc_, i);
-        modelInputInfo.push_back(inputInfo);
-    }
-    if (modelInputInfo.empty()) {
-        return ACLLITE_ERROR;
-    }
-    return ACLLITE_OK;
-}
-
 AclLiteError AclLiteModel::GetModelInputInfo(vector<ModelOutputInfo>& modelInputInfo)
 {
     for (size_t i = 0; i < aclmdlGetNumInputs(modelDesc_); ++i) {
