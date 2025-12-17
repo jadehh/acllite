@@ -466,22 +466,21 @@ AclLiteError AclLiteModel::GetModelInputInfo(vector<ModelOutputInfo>& modelInput
     return ACLLITE_OK;
 }
 
-AclLiteError AclLiteModel::GetModelOutputInfo(vector<ModelOutputInfo>& modelOutputInfo)
+AclLiteError AclLiteModel::GetModelInputInfo(vector<ModelOutputInfo>& modelInputInfo)
 {
-    for (size_t i = 0; i < outputsNum_; ++i) {
-        ModelOutputInfo outputInfo;
-        outputInfo.name = aclmdlGetOutputNameByIndex(modelDesc_, i);
-        aclmdlGetOutputDims(modelDesc_, i, &outputInfo.dims);
-        outputInfo.format = aclmdlGetOutputFormat(modelDesc_, i);
-        outputInfo.dataType = aclmdlGetOutputDataType(modelDesc_, i);
-        modelOutputInfo.push_back(outputInfo);
+    for (size_t i = 0; i < aclmdlGetNumInputs(modelDesc_); ++i) {
+        ModelOutputInfo inputInfo;
+        inputInfo.name = aclmdlGetInputNameByIndex(modelDesc_, i);
+        aclmdlGetInputDims(modelDesc_, i, &inputInfo.dims);
+        inputInfo.format = aclmdlGetInputFormat(modelDesc_, i);
+        inputInfo.dataType = aclmdlGetInputDataType(modelDesc_, i);
+        modelInputInfo.push_back(inputInfo);
     }
-    if (modelOutputInfo.empty()) {
+    if (modelInputInfo.empty()) {
         return ACLLITE_ERROR;
     }
     return ACLLITE_OK;
 }
-
 void AclLiteModel::DestroyOutput()
 {
     if (output_ == nullptr) {
