@@ -825,3 +825,55 @@ AclLiteError VideoCapture::Close()
     DestroyResource();
     return ACLLITE_OK;
 }
+
+AclLiteError VideoCapture::ReconnectFFmpeg()
+{
+    // 1. 停止当前的 FFmpeg 解码线程
+    isStop_ = true;
+    // 等待解码线程结束
+    if (ffmpegDecoder_ != nullptr)
+    {
+        ffmpegDecoder_->StopDecode();   // 假设 FFmpegDecoder 有这个接口，若没有则通过状态轮询等待
+        // 2. 删除旧的 ffmpegDecoder_
+        delete ffmpegDecoder_;
+        ffmpegDecoder_ = nullptr;
+    }
+    while ((status_ >= DECODE_START) && (status_ < DECODE_FFMPEG_FINISHED)) {
+        usleep(kWaitDecodeFinishInterval);
+    }
+    // 3. 丢弃输出队列中残留的旧帧（这些帧属于旧流）
+    do {
+        shared_ptr<ImageData> frame = FrameImageOutQueue(true);
+        if (frame == nullptr) break;
+        if (frame->data != nullptr) {
+            acldvppFree(frame->data.get());
+            frame->data = nullptr;
+        }
+    } while (1);
+
+    // 4. 重置计数器
+    frameId_ = 0;
+    finFrameCnt_ = 0;
+    lastDecodeTime_ = 0;
+
+    // 5. 创建新的 FFmpegDecoder
+    ffmpegDecoder_ = new FFmpegDecoder(streamName_);
+    if (kInvalidTpye == GetVdecType()) {
+        delete ffmpegDecoder_;
+        ffmpegDecoder_ = nullptr;
+        ACLLITE_LOG_ERROR("New stream type invalid after reconnect");
+        return ACLLITE_ERROR_FFMPEG_DECODER_INIT;
+    }
+
+    // 6. 重新获取 fps 并计算间隔
+    int fps = ffmpegDecoder_->GetFps();
+    if (fps == 0) fps = kDefaultFps;
+    fpsInterval_ = kUsec / fps;
+
+    // 7. 设置状态为 DECODE_READY，下次 Read() 时会自动启动新线程
+    status_ = DECODE_READY;
+    isStop_ = false;
+
+    ACLLITE_LOG_INFO("Reconnect FFmpeg for %s success", streamName_.c_str());
+    return ACLLITE_OK;
+}

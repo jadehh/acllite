@@ -226,6 +226,8 @@ public:
         return isJam_;
     }
 
+    AclLiteError ReconnectFFmpeg();
+
 private:
     AclLiteError InitResource();
     AclLiteError InitVdecDecoder();
